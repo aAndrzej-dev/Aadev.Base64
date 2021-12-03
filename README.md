@@ -1,2 +1,2 @@
-# base64
-Base64 Encode/Decode Library
+## C# Base64 Library
+Fast Base64 Encode/Decode Library
