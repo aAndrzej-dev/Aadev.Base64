@@ -12,56 +12,56 @@ namespace Aadev.Base64
         private const string BASE64URLCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
         /// <summary>
-        /// Convert string to Base64 string
+        /// Encode string to base64 string
         /// </summary>
-        /// <param name="source">Orginal string</param>
+        /// <param name="source">String to encode</param>
         /// <param name="standard">Base64 Standard</param>
         /// <returns>Base64 string</returns>
         public static string EncodeToString(ReadOnlySpan<char> source, Base64Standard standard = Base64Standard.Base64)
         {
-            Span<char> span = stackalloc char[(int)(Math.Ceiling(source.Length / 3f) * 4)];
+            Span<char> span = stackalloc char[GetEncodedLenght(source)];
 
             EncodeToString(source, span, standard);
 
             return new string(span);
         }
         /// <summary>
-        /// Convert byte array to Base64 string
+        /// Encode byte array to base64 string
         /// </summary>
-        /// <param name="source">Orginal byte array</param>
+        /// <param name="source">Byte array to encode</param>
         /// <param name="standard">Base64 Standard</param>
         /// <returns>Base64 string</returns>
         public static string EncodeToString(ReadOnlySpan<byte> source, Base64Standard standard = Base64Standard.Base64)
         {
-            Span<char> span = stackalloc char[(int)(Math.Ceiling(source.Length / 3f) * 4)];
+            Span<char> span = stackalloc char[GetEncodedLenght(source)];
 
             EncodeToString(source, span, standard);
 
             return new string(span);
         }
         /// <summary>
-        /// Convert string to Base64 byte array
+        /// Encode string to base64 byte array
         /// </summary>
-        /// <param name="source">Orginal string</param>
+        /// <param name="source">String to encode</param>
         /// <param name="standard">Base64 Standard</param>
         /// <returns>Base64 byte array</returns>
         public static byte[] EncodeToByteArray(ReadOnlySpan<char> source, Base64Standard standard = Base64Standard.Base64)
         {
-            Span<byte> span = stackalloc byte[(int)(Math.Ceiling(source.Length / 3f) * 4)];
+            Span<byte> span = stackalloc byte[GetEncodedLenght(source)];
 
             EncodeToByteArray(source, span, standard);
 
             return span.ToArray();
         }
         /// <summary>
-        /// Convert byte array to Base64 byte array
+        /// Encode byte array to base64 byte array
         /// </summary>
-        /// <param name="source">Orginal byte array</param>
+        /// <param name="source">byte array to encode</param>
         /// <param name="standard">Base64 Standard</param>
         /// <returns>Base64 byte array</returns>
         public static byte[] EncodeToByteArray(ReadOnlySpan<byte> source, Base64Standard standard = Base64Standard.Base64)
         {
-            Span<byte> span = stackalloc byte[(int)(Math.Ceiling(source.Length / 3f) * 4)];
+            Span<byte> span = stackalloc byte[GetEncodedLenght(source)];
 
             EncodeToByteArray(source, span, standard);
 
@@ -348,7 +348,7 @@ namespace Aadev.Base64
         /// <returns>Normal string</returns>
         public static string DecodeToString(ReadOnlySpan<char> source, Base64Standard standard = Base64Standard.Base64)
         {
-            Span<char> span = stackalloc char[source.Length / 4 * 3 - (source.EndsWith("==") ? 2 : (source.EndsWith("=") ? 1 : 0))];
+            Span<char> span = stackalloc char[GetDecodedLenght(source)];
 
             DecodeToString(source, span, standard);
 
@@ -362,7 +362,7 @@ namespace Aadev.Base64
         /// <returns>Normal string</returns>
         public static string DecodeToString(ReadOnlySpan<byte> source, Base64Standard standard = Base64Standard.Base64)
         {
-            Span<char> span = stackalloc char[source.Length / 4 * 3 - (source[^1] == (byte)'=' ? 1 : 0) - (source[^2] == (byte)'=' ? 1 : 0)];
+            Span<char> span = stackalloc char[GetDecodedLenght(source)];
 
             DecodeToString(source, span, standard);
 
@@ -376,7 +376,7 @@ namespace Aadev.Base64
         /// <returns>Normal byte array</returns>
         public static byte[] DecodeToByteArray(ReadOnlySpan<char> source, Base64Standard standard = Base64Standard.Base64)
         {
-            Span<byte> span = stackalloc byte[source.Length / 4 * 3 - (source.EndsWith("==") ? 2 : (source.EndsWith("=") ? 1 : 0))];
+            Span<byte> span = stackalloc byte[GetDecodedLenght(source)];
 
             DecodeToByteArray(source, span, standard);
 
@@ -390,7 +390,7 @@ namespace Aadev.Base64
         /// <returns>Normal byte array</returns>
         public static byte[] DecodeToByteArray(ReadOnlySpan<byte> source, Base64Standard standard = Base64Standard.Base64)
         {
-            Span<byte> span = stackalloc byte[source.Length / 4 * 3 - (source[^1] == (byte)'=' ? 1 : 0) - (source[^2] == (byte)'=' ? 1 : 0)];
+            Span<byte> span = stackalloc byte[GetDecodedLenght(source)];
 
             DecodeToByteArray(source, span, standard);
 
@@ -616,5 +616,30 @@ namespace Aadev.Base64
 
             return offset;
         }
+
+        /// <summary>
+        /// Returns lenght of Base64 string when encoding
+        /// </summary>
+        /// <param name="source">String to encode</param>
+        /// <returns>Lenght of encoded base64 string</returns>
+        public static int GetEncodedLenght(ReadOnlySpan<char> source) => (int)(Math.Ceiling(source.Length / 3f) * 4);
+        /// <summary>
+        /// Returns lenght of Base64 byte array when encoding
+        /// </summary>
+        /// <param name="source">String to encode</param>
+        /// <returns>Lenght of encoded base64 string</returns>
+        public static int GetEncodedLenght(ReadOnlySpan<byte> source) => (int)(Math.Ceiling(source.Length / 3f) * 4);
+        /// <summary>
+        /// Returns lenght of decoded string
+        /// </summary>
+        /// <param name="source">Base64 string</param>
+        /// <returns>Lenght of decoded string</returns>
+        public static int GetDecodedLenght(ReadOnlySpan<char> source) => source.Length / 4 * 3 - (source[^1] == '=' ? 1 : 0) - (source[^2] == '=' ? 1 : 0);
+        /// <summary>
+        /// Returns lenght of decoded byte array
+        /// </summary>
+        /// <param name="source">Base64 byte array</param>
+        /// <returns>Lenght of decoded string</returns>
+        public static int GetDecodedLenght(ReadOnlySpan<byte> source) => source.Length / 4 * 3 - (source[^1] == (byte)'=' ? 1 : 0) - (source[^2] == (byte)'=' ? 1 : 0);
     }
 }

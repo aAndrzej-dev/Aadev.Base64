@@ -1,30 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+	<PropertyGroup>
 
-    <TargetFrameworks>net5.0;net6.0;netstandard2.1</TargetFrameworks>
-    <RootNamespace>Aadev.Base64</RootNamespace>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <AssemblyName>Aadev.Base64</AssemblyName>
-    <Authors>aAndrzej-dev</Authors>
-    <Description>Base64 Encode/Decode Library</Description>
-    <Copyright>Copyright © aAndrzej-dev 2022</Copyright>
-    <PackageTags>base64</PackageTags>
-    <SignAssembly>False</SignAssembly>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/aAndrzej-dev/Aadev.Base64</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/aAndrzej-dev/Aadev.Base64</PackageProjectUrl>
-    <DebugType>none</DebugType>
-    <AssemblyVersion>1.2.2.0</AssemblyVersion>
-    <FileVersion>1.2.2.0</FileVersion>
-	<Version>1.2.2</Version>
-	
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-	<PackageLicenseExpression>MIT</PackageLicenseExpression>
-	<PackageReleaseNotes>Added support for .NET Standard 2.1
-Encoding to string use ovaer 50% less memory and it's about 50% faster because using string.Create instead of StringBuilder
-Added support for encoding base64 to byte array</PackageReleaseNotes>
-  </PropertyGroup>
+		<TargetFrameworks>net5.0;net6.0;netstandard2.1</TargetFrameworks>
+		<RootNamespace>Aadev.Base64</RootNamespace>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<AssemblyName>Aadev.Base64</AssemblyName>
+		<Authors>aAndrzej-dev</Authors>
+		<Description>Base64 Encode/Decode Library</Description>
+		<Copyright>Copyright © aAndrzej-dev 2022</Copyright>
+		<PackageTags>base64</PackageTags>
+		<SignAssembly>False</SignAssembly>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<RepositoryUrl>https://github.com/aAndrzej-dev/Aadev.Base64</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/aAndrzej-dev/Aadev.Base64</PackageProjectUrl>
+		<DebugType>none</DebugType>
+		<AssemblyVersion>2.0.0</AssemblyVersion>
+		<FileVersion>2.0.0</FileVersion>
+		<Version>2.0.0</Version>
+
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReleaseNotes>
+			Better, faster, memory efficient decoding by using span
+			Added ability to decode Base64 string/byte array to byte array
+			Added ability to decode/encode to buffer
+		</PackageReleaseNotes>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
 
 
 </Project>

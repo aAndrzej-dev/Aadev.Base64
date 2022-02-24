@@ -2,8 +2,11 @@
 
 namespace Aadev.Base64
 {
+    /// <summary>
+    /// Base64 Format Exception
+    /// </summary>
     public class Base64Exception : Exception
     {
-        public Base64Exception(string msg) : base(msg) { }
+        internal Base64Exception(string msg) : base(msg) { }
     }
 }
