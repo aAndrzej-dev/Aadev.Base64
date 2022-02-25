@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 
-		<TargetFrameworks>net5.0;net6.0;netstandard2.1</TargetFrameworks>
+		<TargetFrameworks>net5.0;net6.0;netstandard2.1;netstandard2.0</TargetFrameworks>
 		<RootNamespace>Aadev.Base64</RootNamespace>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<AssemblyName>Aadev.Base64</AssemblyName>
@@ -15,19 +15,18 @@
 		<RepositoryUrl>https://github.com/aAndrzej-dev/Aadev.Base64</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/aAndrzej-dev/Aadev.Base64</PackageProjectUrl>
 		<DebugType>none</DebugType>
-		<AssemblyVersion>2.0.0</AssemblyVersion>
-		<FileVersion>2.0.0</FileVersion>
-		<Version>2.0.0</Version>
+		<AssemblyVersion>2.1.2</AssemblyVersion>
+		<FileVersion>2.1.2</FileVersion>
+		<Version>2.1.2</Version>
 
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageReleaseNotes>
-			Better, faster, memory efficient decoding by using span
-			Added ability to decode Base64 string/byte array to byte array
-			Added ability to decode/encode to buffer
-		</PackageReleaseNotes>
+		<PackageReleaseNotes>Support for Net Standard 2.0 has been added, but it uses twice memory than Net Standard 2.1 and later (this affect only for methods returning strings and will be fixed in the future)</PackageReleaseNotes>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<PackageReference Include="System.Memory" Version="4.5.4" />
+	</ItemGroup>
 
 </Project>
