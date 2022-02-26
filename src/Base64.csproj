@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 
-		<TargetFrameworks>net5.0;net6.0;netstandard2.1;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net5.0;net6.0;netstandard2.1;netstandard1.1</TargetFrameworks>
 		<RootNamespace>Aadev.Base64</RootNamespace>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<AssemblyName>Aadev.Base64</AssemblyName>
@@ -15,18 +15,24 @@
 		<RepositoryUrl>https://github.com/aAndrzej-dev/Aadev.Base64</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/aAndrzej-dev/Aadev.Base64</PackageProjectUrl>
 		<DebugType>none</DebugType>
-		<AssemblyVersion>2.1.2</AssemblyVersion>
-		<FileVersion>2.1.2</FileVersion>
-		<Version>2.1.2</Version>
-
+		<AssemblyVersion>2.1.5</AssemblyVersion>
+		<FileVersion>2.1.5</FileVersion>
+		<Version>2.1.5</Version>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageReleaseNotes>Support for Net Standard 2.0 has been added, but it uses twice memory than Net Standard 2.1 and later (this affect only for methods returning strings and will be fixed in the future)</PackageReleaseNotes>
+		<PackageReleaseNotes>
+			Support for Net Standard 1.1 has been added
+			Now memory usage for frameworks using netstandard 2.0 and below is almost the same as in netstandard 2.1 and above
+		</PackageReleaseNotes>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<AllowUnsafeBlocks Condition="'$(TargetFramework)' == 'netstandard1.1'">True</AllowUnsafeBlocks>
+
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
 		<PackageReference Include="System.Memory" Version="4.5.4" />
 	</ItemGroup>
+
+
 
 </Project>

@@ -22,10 +22,16 @@ namespace Aadev.Base64
             Span<char> span = stackalloc char[GetEncodedLenght(source)];
 
             EncodeToString(source, span, standard);
+
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER
             return new string(span);
 #else
-            return new string(span.ToArray());
+            unsafe
+            {
+                fixed (char* ch = &span.GetPinnableReference()) {
+                    return new string(ch);
+                }
+            }
 #endif
         }
         /// <summary>
@@ -43,7 +49,12 @@ namespace Aadev.Base64
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER
             return new string(span);
 #else
-            return new string(span.ToArray());
+            unsafe
+            {
+                fixed (char* ch = &span.GetPinnableReference()) {
+                    return new string(ch);
+                }
+            }
 #endif
         }
         /// <summary>
@@ -362,7 +373,12 @@ namespace Aadev.Base64
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER
             return new string(span);
 #else
-            return new string(span.ToArray());
+            unsafe
+            {
+                fixed (char* ch = &span.GetPinnableReference()) {
+                    return new string(ch);
+                }
+            }
 #endif
         }
         /// <summary>
@@ -380,7 +396,12 @@ namespace Aadev.Base64
 #if NETSTANDARD2_1_OR_GREATER || NET5_0_OR_GREATER
             return new string(span);
 #else
-            return new string(span.ToArray());
+            unsafe
+            {
+                fixed (char* ch = &span.GetPinnableReference()) {
+                    return new string(ch);
+                }
+            }
 #endif
         }
         /// <summary>
