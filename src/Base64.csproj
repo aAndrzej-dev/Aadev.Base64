@@ -14,17 +14,19 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<RepositoryUrl>https://github.com/aAndrzej-dev/Aadev.Base64</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/aAndrzej-dev/Aadev.Base64</PackageProjectUrl>
-		<DebugType>none</DebugType>
-		<AssemblyVersion>2.1.5</AssemblyVersion>
-		<FileVersion>2.1.5</FileVersion>
-		<Version>2.1.5</Version>
+		<DebugType>portable</DebugType>
+		<AssemblyVersion>2.1.7</AssemblyVersion>
+		<FileVersion>2.1.7</FileVersion>
+		<Version>2.1.7</Version>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageReleaseNotes>
-			Support for Net Standard 1.1 has been added
-			Now memory usage for frameworks using netstandard 2.0 and below is almost the same as in netstandard 2.1 and above
-		</PackageReleaseNotes>
+		<PackageReleaseNotes>Updated documentation</PackageReleaseNotes>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Optimize>true</Optimize>
+
+
 		<AllowUnsafeBlocks Condition="'$(TargetFramework)' == 'netstandard1.1'">True</AllowUnsafeBlocks>
 
 	</PropertyGroup>

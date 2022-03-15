@@ -8,8 +8,10 @@ namespace Aadev.Base64
     /// </summary>
     public static class Base64
     {
-        private const string BASE64CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-        private const string BASE64URLCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+        private const string BASE64CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+        private const string BASE64URLCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=";
+
+        #region Encode_simple
 
         /// <summary>
         /// Encode string to base64 string
@@ -86,284 +88,330 @@ namespace Aadev.Base64
             return span.ToArray();
         }
 
-        public static int EncodeToString(ReadOnlySpan<char> source, Span<char> buffer, Base64Standard standard = Base64Standard.Base64)
-        {
-            int offset = 0;
-            if (standard is Base64Standard.Base64Url)
-            {
-                for (int i = 0; i < source.Length; i += 3)
-                {
-                    buffer[offset++] = BASE64URLCHARS[source[i + 0] >> 2];
+        #endregion
 
-                    if (i + 1 < source.Length)
-                    {
-                        buffer[offset++] = BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
-
-                        if (i + 2 < source.Length)
-                        {
-                            buffer[offset++] = BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
-                            buffer[offset++] = BASE64URLCHARS[source[i + 2] & 0b00111111];
-                        }
-                        else
-                        {
-                            buffer[offset++] = BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2];
-                            buffer[offset++] = '=';
-                        }
-
-                    }
-                    else
-                    {
-                        buffer[offset++] = BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4];
-                        buffer[offset++] = '=';
-                        buffer[offset++] = '=';
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < source.Length; i += 3)
-                {
-                    buffer[offset++] = BASE64CHARS[source[i + 0] >> 2];
-
-                    if (i + 1 < source.Length)
-                    {
-                        buffer[offset++] = BASE64CHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
-
-                        if (i + 2 < source.Length)
-                        {
-                            buffer[offset++] = BASE64CHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
-                            buffer[offset++] = BASE64CHARS[source[i + 2] & 0b00111111];
-                        }
-                        else
-                        {
-                            buffer[offset++] = BASE64CHARS[(source[i + 1] & 0b00001111) << 2];
-                            buffer[offset++] = '=';
-                        }
-
-                    }
-                    else
-                    {
-                        buffer[offset++] = BASE64CHARS[(source[i + 0] & 0b00000011) << 4];
-                        buffer[offset++] = '=';
-                        buffer[offset++] = '=';
-                    }
-                }
-            }
-
-            return offset;
-        }
-        public static int EncodeToString(ReadOnlySpan<byte> source, Span<char> buffer, Base64Standard standard = Base64Standard.Base64)
-        {
-
-            int offset = 0;
-            if (standard is Base64Standard.Base64Url)
-            {
-                for (int i = 0; i < source.Length; i += 3)
-                {
-                    buffer[offset++] = BASE64URLCHARS[source[i + 0] >> 2];
-
-                    if (i + 1 < source.Length)
-                    {
-                        buffer[offset++] = BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
-
-                        if (i + 2 < source.Length)
-                        {
-
-                            buffer[offset++] = BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
-                            buffer[offset++] = BASE64URLCHARS[source[i + 2] & 0b00111111];
-                        }
-                        else
-                        {
-                            buffer[offset++] = BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2];
-                            buffer[offset++] = '=';
-                        }
-
-                    }
-                    else
-                    {
-                        buffer[offset++] = BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4];
-                        buffer[offset++] = '=';
-                        buffer[offset++] = '=';
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < source.Length; i += 3)
-                {
-                    buffer[offset++] = BASE64CHARS[source[i + 0] >> 2];
-
-                    if (i + 1 < source.Length)
-                    {
-                        buffer[offset++] = BASE64CHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
-
-                        if (i + 2 < source.Length)
-                        {
-
-                            buffer[offset++] = BASE64CHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
-                            buffer[offset++] = BASE64CHARS[source[i + 2] & 0b00111111];
-                        }
-                        else
-                        {
-                            buffer[offset++] = BASE64CHARS[(source[i + 1] & 0b00001111) << 2];
-                            buffer[offset++] = '=';
-                        }
-
-                    }
-                    else
-                    {
-                        buffer[offset++] = BASE64CHARS[(source[i + 0] & 0b00000011) << 4];
-                        buffer[offset++] = '=';
-                        buffer[offset++] = '=';
-                    }
-                }
-            }
-
-            return offset;
-        }
-        public static int EncodeToByteArray(ReadOnlySpan<char> source, Span<byte> buffer, Base64Standard standard = Base64Standard.Base64)
-        {
-            int offset = 0;
-            if (standard is Base64Standard.Base64Url)
-            {
-                for (int i = 0; i < source.Length; i += 3)
-                {
-                    buffer[offset++] = (byte)BASE64URLCHARS[source[i + 0] >> 2];
-
-                    if (i + 1 < source.Length)
-                    {
-                        buffer[offset++] = (byte)BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
-
-                        if (i + 2 < source.Length)
-                        {
-                            buffer[offset++] = (byte)BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
-                            buffer[offset++] = (byte)BASE64URLCHARS[source[i + 2] & 0b00111111];
-                        }
-                        else
-                        {
-                            buffer[offset++] = (byte)BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2];
-                            buffer[offset++] = (byte)'=';
-                        }
-
-                    }
-                    else
-                    {
-                        buffer[offset++] = (byte)BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4];
-                        buffer[offset++] = (byte)'=';
-                        buffer[offset++] = (byte)'=';
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < source.Length; i += 3)
-                {
-                    buffer[offset++] = (byte)BASE64CHARS[source[i + 0] >> 2];
-
-                    if (i + 1 < source.Length)
-                    {
-                        buffer[offset++] = (byte)BASE64CHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
-
-                        if (i + 2 < source.Length)
-                        {
-                            buffer[offset++] = (byte)BASE64CHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
-                            buffer[offset++] = (byte)BASE64CHARS[source[i + 2] & 0b00111111];
-                        }
-                        else
-                        {
-                            buffer[offset++] = (byte)BASE64CHARS[(source[i + 1] & 0b00001111) << 2];
-                            buffer[offset++] = (byte)'=';
-                        }
-
-                    }
-                    else
-                    {
-                        buffer[offset++] = (byte)BASE64CHARS[(source[i + 0] & 0b00000011) << 4];
-                        buffer[offset++] = (byte)'=';
-                        buffer[offset++] = (byte)'=';
-                    }
-                }
-            }
-
-            return offset;
-
-        }
-        public static int EncodeToByteArray(ReadOnlySpan<byte> source, Span<byte> buffer, Base64Standard standard = Base64Standard.Base64)
-        {
-
-            int offset = 0;
-            if (standard is Base64Standard.Base64Url)
-            {
-                for (int i = 0; i < source.Length; i += 3)
-                {
-                    buffer[offset++] = (byte)BASE64URLCHARS[source[i + 0] >> 2];
-
-                    if (i + 1 < source.Length)
-                    {
-                        buffer[offset++] = (byte)BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
-
-                        if (i + 2 < source.Length)
-                        {
-                            buffer[offset++] = (byte)BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
-                            buffer[offset++] = (byte)BASE64URLCHARS[source[i + 2] & 0b00111111];
-                        }
-                        else
-                        {
-                            buffer[offset++] = (byte)BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2];
-                            buffer[offset++] = (byte)'=';
-                        }
-
-                    }
-                    else
-                    {
-                        buffer[offset++] = (byte)BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4];
-                        buffer[offset++] = (byte)'=';
-                        buffer[offset++] = (byte)'=';
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < source.Length; i += 3)
-                {
-                    buffer[offset++] = (byte)BASE64CHARS[source[i + 0] >> 2];
-
-                    if (i + 1 < source.Length)
-                    {
-                        buffer[offset++] = (byte)BASE64CHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
-
-                        if (i + 2 < source.Length)
-                        {
-                            buffer[offset++] = (byte)BASE64CHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
-                            buffer[offset++] = (byte)BASE64CHARS[source[i + 2] & 0b00111111];
-                        }
-                        else
-                        {
-                            buffer[offset++] = (byte)BASE64CHARS[(source[i + 1] & 0b00001111) << 2];
-                            buffer[offset++] = (byte)'=';
-                        }
-
-                    }
-                    else
-                    {
-                        buffer[offset++] = (byte)BASE64CHARS[(source[i + 0] & 0b00000011) << 4];
-                        buffer[offset++] = (byte)'=';
-                        buffer[offset++] = (byte)'=';
-                    }
-                }
-            }
-
-            return offset;
-
-        }
-
+        #region Encode_buffer
 
         /// <summary>
-        /// Convert Base64 string to normal string
+        /// Encode string to base64 string
+        /// </summary>
+        /// <param name="source">String to encode</param>
+        /// <param name="destination">Destination buffer</param>
+        /// <param name="standard">Base64 Standard</param>
+        /// <returns>Number of chars written into buffer</returns>
+        /// <exception cref="ArgumentException">buffer is to small</exception>
+        public static int EncodeToString(ReadOnlySpan<char> source, Span<char> destination, Base64Standard standard = Base64Standard.Base64)
+        {
+            if (destination.Length < GetEncodedLenght(source))
+                throw new ArgumentException($"{nameof(destination)} buffer is to small. Required {source.Length}, {destination.Length} given");
+            int offset = 0;
+            if (standard is Base64Standard.Base64Url)
+            {
+                for (int i = 0; i < source.Length; i += 3)
+                {
+                    destination[offset++] = BASE64URLCHARS[source[i + 0] >> 2];
+
+                    if (i + 1 < source.Length)
+                    {
+                        destination[offset++] = BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
+
+                        if (i + 2 < source.Length)
+                        {
+                            destination[offset++] = BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
+                            destination[offset++] = BASE64URLCHARS[source[i + 2] & 0b00111111];
+                        }
+                        else
+                        {
+                            destination[offset++] = BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2];
+                            destination[offset++] = '=';
+                        }
+
+                    }
+                    else
+                    {
+                        destination[offset++] = BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4];
+                        destination[offset++] = '=';
+                        destination[offset++] = '=';
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < source.Length; i += 3)
+                {
+                    destination[offset++] = BASE64CHARS[source[i + 0] >> 2];
+
+                    if (i + 1 < source.Length)
+                    {
+                        destination[offset++] = BASE64CHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
+
+                        if (i + 2 < source.Length)
+                        {
+                            destination[offset++] = BASE64CHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
+                            destination[offset++] = BASE64CHARS[source[i + 2] & 0b00111111];
+                        }
+                        else
+                        {
+                            destination[offset++] = BASE64CHARS[(source[i + 1] & 0b00001111) << 2];
+                            destination[offset++] = '=';
+                        }
+
+                    }
+                    else
+                    {
+                        destination[offset++] = BASE64CHARS[(source[i + 0] & 0b00000011) << 4];
+                        destination[offset++] = '=';
+                        destination[offset++] = '=';
+                    }
+                }
+            }
+
+            return offset;
+        }
+        /// <summary>
+        /// Encode byte array to base64 string
+        /// </summary>
+        /// <param name="source">Byte array to encode</param>
+        /// <param name="destination">Destination buffer</param>
+        /// <param name="standard">Base64 Standard</param>
+        /// <returns>Number of chars written into buffer</returns>
+        /// <exception cref="ArgumentException">buffer is to small</exception>
+        public static int EncodeToString(ReadOnlySpan<byte> source, Span<char> destination, Base64Standard standard = Base64Standard.Base64)
+        {
+            if (destination.Length < GetEncodedLenght(source))
+                throw new ArgumentException($"{nameof(destination)} buffer is to small. Required {source.Length}, {destination.Length} given");
+            int offset = 0;
+            if (standard is Base64Standard.Base64Url)
+            {
+                for (int i = 0; i < source.Length; i += 3)
+                {
+                    destination[offset++] = BASE64URLCHARS[source[i + 0] >> 2];
+
+                    if (i + 1 < source.Length)
+                    {
+                        destination[offset++] = BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
+
+                        if (i + 2 < source.Length)
+                        {
+
+                            destination[offset++] = BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
+                            destination[offset++] = BASE64URLCHARS[source[i + 2] & 0b00111111];
+                        }
+                        else
+                        {
+                            destination[offset++] = BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2];
+                            destination[offset++] = '=';
+                        }
+
+                    }
+                    else
+                    {
+                        destination[offset++] = BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4];
+                        destination[offset++] = '=';
+                        destination[offset++] = '=';
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < source.Length; i += 3)
+                {
+                    destination[offset++] = BASE64CHARS[source[i + 0] >> 2];
+
+                    if (i + 1 < source.Length)
+                    {
+                        destination[offset++] = BASE64CHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
+
+                        if (i + 2 < source.Length)
+                        {
+
+                            destination[offset++] = BASE64CHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
+                            destination[offset++] = BASE64CHARS[source[i + 2] & 0b00111111];
+                        }
+                        else
+                        {
+                            destination[offset++] = BASE64CHARS[(source[i + 1] & 0b00001111) << 2];
+                            destination[offset++] = '=';
+                        }
+
+                    }
+                    else
+                    {
+                        destination[offset++] = BASE64CHARS[(source[i + 0] & 0b00000011) << 4];
+                        destination[offset++] = '=';
+                        destination[offset++] = '=';
+                    }
+                }
+            }
+
+            return offset;
+        }
+        /// <summary>
+        /// Encode string to base64 byte array
+        /// </summary>
+        /// <param name="source">String to encode</param>
+        /// <param name="destination">Destination buffer</param>
+        /// <param name="standard">Base64 Standard</param>
+        /// <returns>Number of chars written into buffer</returns>
+        /// <exception cref="ArgumentException">buffer is to small</exception>
+        public static int EncodeToByteArray(ReadOnlySpan<char> source, Span<byte> destination, Base64Standard standard = Base64Standard.Base64)
+        {
+            if (destination.Length < GetEncodedLenght(source))
+                throw new ArgumentException($"{nameof(destination)} buffer is to small. Required {source.Length}, {destination.Length} given");
+            int offset = 0;
+            if (standard is Base64Standard.Base64Url)
+            {
+                for (int i = 0; i < source.Length; i += 3)
+                {
+                    destination[offset++] = (byte)BASE64URLCHARS[source[i + 0] >> 2];
+
+                    if (i + 1 < source.Length)
+                    {
+                        destination[offset++] = (byte)BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
+
+                        if (i + 2 < source.Length)
+                        {
+                            destination[offset++] = (byte)BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
+                            destination[offset++] = (byte)BASE64URLCHARS[source[i + 2] & 0b00111111];
+                        }
+                        else
+                        {
+                            destination[offset++] = (byte)BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2];
+                            destination[offset++] = (byte)'=';
+                        }
+
+                    }
+                    else
+                    {
+                        destination[offset++] = (byte)BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4];
+                        destination[offset++] = (byte)'=';
+                        destination[offset++] = (byte)'=';
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < source.Length; i += 3)
+                {
+                    destination[offset++] = (byte)BASE64CHARS[source[i + 0] >> 2];
+
+                    if (i + 1 < source.Length)
+                    {
+                        destination[offset++] = (byte)BASE64CHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
+
+                        if (i + 2 < source.Length)
+                        {
+                            destination[offset++] = (byte)BASE64CHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
+                            destination[offset++] = (byte)BASE64CHARS[source[i + 2] & 0b00111111];
+                        }
+                        else
+                        {
+                            destination[offset++] = (byte)BASE64CHARS[(source[i + 1] & 0b00001111) << 2];
+                            destination[offset++] = (byte)'=';
+                        }
+
+                    }
+                    else
+                    {
+                        destination[offset++] = (byte)BASE64CHARS[(source[i + 0] & 0b00000011) << 4];
+                        destination[offset++] = (byte)'=';
+                        destination[offset++] = (byte)'=';
+                    }
+                }
+            }
+
+            return offset;
+
+        }
+        /// <summary>
+        /// Encode byte array to base64 byte array
+        /// </summary>
+        /// <param name="source">Byte array to encode</param>
+        /// <param name="destination">Destination buffer</param>
+        /// <param name="standard">Base64 Standard</param>
+        /// <returns>Number of chars written into buffer</returns>
+        /// <exception cref="ArgumentException">buffer is to small</exception>
+        public static int EncodeToByteArray(ReadOnlySpan<byte> source, Span<byte> destination, Base64Standard standard = Base64Standard.Base64)
+        {
+            if (destination.Length < GetEncodedLenght(source))
+                throw new ArgumentException($"{nameof(destination)} buffer is to small. Required {source.Length}, {destination.Length} given");
+            int offset = 0;
+            if (standard is Base64Standard.Base64Url)
+            {
+                for (int i = 0; i < source.Length; i += 3)
+                {
+                    destination[offset++] = (byte)BASE64URLCHARS[source[i + 0] >> 2];
+
+                    if (i + 1 < source.Length)
+                    {
+                        destination[offset++] = (byte)BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
+
+                        if (i + 2 < source.Length)
+                        {
+                            destination[offset++] = (byte)BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
+                            destination[offset++] = (byte)BASE64URLCHARS[source[i + 2] & 0b00111111];
+                        }
+                        else
+                        {
+                            destination[offset++] = (byte)BASE64URLCHARS[(source[i + 1] & 0b00001111) << 2];
+                            destination[offset++] = (byte)'=';
+                        }
+
+                    }
+                    else
+                    {
+                        destination[offset++] = (byte)BASE64URLCHARS[(source[i + 0] & 0b00000011) << 4];
+                        destination[offset++] = (byte)'=';
+                        destination[offset++] = (byte)'=';
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < source.Length; i += 3)
+                {
+                    destination[offset++] = (byte)BASE64CHARS[source[i + 0] >> 2];
+
+                    if (i + 1 < source.Length)
+                    {
+                        destination[offset++] = (byte)BASE64CHARS[(source[i + 0] & 0b00000011) << 4 | source[i + 1] >> 4];
+
+                        if (i + 2 < source.Length)
+                        {
+                            destination[offset++] = (byte)BASE64CHARS[(source[i + 1] & 0b00001111) << 2 | source[i + 2] >> 6];
+                            destination[offset++] = (byte)BASE64CHARS[source[i + 2] & 0b00111111];
+                        }
+                        else
+                        {
+                            destination[offset++] = (byte)BASE64CHARS[(source[i + 1] & 0b00001111) << 2];
+                            destination[offset++] = (byte)'=';
+                        }
+
+                    }
+                    else
+                    {
+                        destination[offset++] = (byte)BASE64CHARS[(source[i + 0] & 0b00000011) << 4];
+                        destination[offset++] = (byte)'=';
+                        destination[offset++] = (byte)'=';
+                    }
+                }
+            }
+
+            return offset;
+
+        }
+
+        #endregion
+
+        #region Decode_simple
+
+        /// <summary>
+        /// Decode base64 string to decoded string
         /// </summary>
         /// <param name="source">Base64 string</param>
         /// <param name="standard">Base64 Standard</param>
-        /// <returns>Normal string</returns>
+        /// <returns>Decoded string</returns>
+        /// <exception cref="Base64Exception">Base64 string must be a multiple of 4</exception>
         public static string DecodeToString(ReadOnlySpan<char> source, Base64Standard standard = Base64Standard.Base64)
         {
             Span<char> span = stackalloc char[GetDecodedLenght(source)];
@@ -382,11 +430,12 @@ namespace Aadev.Base64
 #endif
         }
         /// <summary>
-        /// Convert Base64 byte array to normal string
+        /// Decode base64 byte array to string
         /// </summary>
         /// <param name="source">Base64 byte array</param>
         /// <param name="standard">Base64 Standard</param>
-        /// <returns>Normal string</returns>
+        /// <returns>Decoded string</returns>
+        /// <exception cref="Base64Exception">Base64 string must be a multiple of 4</exception>
         public static string DecodeToString(ReadOnlySpan<byte> source, Base64Standard standard = Base64Standard.Base64)
         {
             Span<char> span = stackalloc char[GetDecodedLenght(source)];
@@ -405,11 +454,12 @@ namespace Aadev.Base64
 #endif
         }
         /// <summary>
-        /// Convert Base64 string to normal byte array
+        /// Decode base64 string to byte array
         /// </summary>
         /// <param name="source">Base64 string</param>
         /// <param name="standard">Base64 Standard</param>
-        /// <returns>Normal byte array</returns>
+        /// <returns>Decoded byte array</returns>
+        /// <exception cref="Base64Exception">Base64 string must be a multiple of 4</exception>
         public static byte[] DecodeToByteArray(ReadOnlySpan<char> source, Base64Standard standard = Base64Standard.Base64)
         {
             Span<byte> span = stackalloc byte[GetDecodedLenght(source)];
@@ -419,11 +469,12 @@ namespace Aadev.Base64
             return span.ToArray();
         }
         /// <summary>
-        /// Convert Base64 byte array to normal byte array
+        /// Decode base64 byte array to byte array
         /// </summary>
         /// <param name="source">Base64 byte array</param>
         /// <param name="standard">Base64 Standard</param>
-        /// <returns>Normal byte array</returns>
+        /// <returns>Decoded byte array</returns>
+        /// <exception cref="Base64Exception">Base64 string must be a multiple of 4</exception>
         public static byte[] DecodeToByteArray(ReadOnlySpan<byte> source, Base64Standard standard = Base64Standard.Base64)
         {
             Span<byte> span = stackalloc byte[GetDecodedLenght(source)];
@@ -433,9 +484,23 @@ namespace Aadev.Base64
             return span.ToArray();
         }
 
+        #endregion
 
-        public static int DecodeToString(ReadOnlySpan<char> source, Span<char> buffer, Base64Standard standard = Base64Standard.Base64)
+        #region Decode_buffer
+
+        /// <summary>
+        /// Decode base64 string to string
+        /// </summary>
+        /// <param name="source">String to decode</param>
+        /// <param name="destination">Destination buffer</param>
+        /// <param name="standard">Base64 Standard</param>
+        /// <returns>Number of chars written into buffer</returns>
+        /// <exception cref="ArgumentException">buffer is to small</exception>
+        /// <exception cref="Base64Exception">Base64 string must be a multiple of 4</exception>
+        public static int DecodeToString(ReadOnlySpan<char> source, Span<char> destination, Base64Standard standard = Base64Standard.Base64)
         {
+            if (destination.Length < GetDecodedLenght(source))
+                throw new ArgumentException($"{nameof(destination)} buffer is to small. Required {source.Length}, {destination.Length} given");
             if (source.Length % 4 != 0)
             {
                 throw new Base64Exception("Base64 string must be a multiple of 4");
@@ -451,15 +516,18 @@ namespace Aadev.Base64
                     int g1 = BASE64URLCHARS.IndexOf(source[i + 1]);
                     int g2 = BASE64URLCHARS.IndexOf(source[i + 2]);
                     int g3 = BASE64URLCHARS.IndexOf(source[i + 3]);
-                    buffer[offset++] = (char)(g0 << 2 | g1 >> 4);
 
-                    if (g2 == -1) continue;
+                    if (g0 == -1 || g1 == -1 || g2 == -1 || g3 == -1) throw new Base64Exception($"Invalid char in base64 string");
 
-                    buffer[offset++] = (char)((g1 & 0b00001111) << 4 | (g2 >> 2));
+                    destination[offset++] = (char)(g0 << 2 | g1 >> 4);
 
-                    if (g3 == -1) continue;
+                    if (g2 == 64) continue;
 
-                    buffer[offset++] = (char)((g2 & 0b00000011) << 6 | g3);
+                    destination[offset++] = (char)((g1 & 0b00001111) << 4 | (g2 >> 2));
+
+                    if (g3 == 64) continue;
+
+                    destination[offset++] = (char)((g2 & 0b00000011) << 6 | g3);
                 }
             }
             else
@@ -470,22 +538,36 @@ namespace Aadev.Base64
                     int g1 = BASE64CHARS.IndexOf(source[i + 1]);
                     int g2 = BASE64CHARS.IndexOf(source[i + 2]);
                     int g3 = BASE64CHARS.IndexOf(source[i + 3]);
-                    buffer[offset++] = (char)(g0 << 2 | g1 >> 4);
 
-                    if (g2 == -1) continue;
+                    if (g0 == -1 || g1 == -1 || g2 == -1 || g3 == -1) throw new Base64Exception($"Invalid char in base64 string");
 
-                    buffer[offset++] = (char)((g1 & 0b00001111) << 4 | (g2 >> 2));
+                    destination[offset++] = (char)(g0 << 2 | g1 >> 4);
 
-                    if (g3 == -1) continue;
+                    if (g2 == 64) continue;
 
-                    buffer[offset++] = (char)((g2 & 0b00000011) << 6 | g3);
+                    destination[offset++] = (char)((g1 & 0b00001111) << 4 | (g2 >> 2));
+
+                    if (g3 == 64) continue;
+
+                    destination[offset++] = (char)((g2 & 0b00000011) << 6 | g3);
                 }
             }
 
             return offset;
         }
-        public static int DecodeToString(ReadOnlySpan<byte> source, Span<char> buffer, Base64Standard standard = Base64Standard.Base64)
+        /// <summary>
+        /// Decode base64 byte array to string
+        /// </summary>
+        /// <param name="source">Byte array to decode</param>
+        /// <param name="destination">Destination buffer</param>
+        /// <param name="standard">Base64 Standard</param>
+        /// <returns>Number of chars written into buffer</returns>
+        /// <exception cref="ArgumentException">buffer is to small</exception>
+        /// <exception cref="Base64Exception">Base64 string must be a multiple of 4</exception>
+        public static int DecodeToString(ReadOnlySpan<byte> source, Span<char> destination, Base64Standard standard = Base64Standard.Base64)
         {
+            if (destination.Length < GetDecodedLenght(source))
+                throw new ArgumentException($"{nameof(destination)} buffer is to small. Required {source.Length}, {destination.Length} given");
             if (source.Length % 4 != 0)
             {
                 throw new Base64Exception("Base64 string lenght must be multiplication of 4");
@@ -500,15 +582,18 @@ namespace Aadev.Base64
                     int g1 = BASE64URLCHARS.IndexOf((char)source[i + 1]);
                     int g2 = BASE64URLCHARS.IndexOf((char)source[i + 2]);
                     int g3 = BASE64URLCHARS.IndexOf((char)source[i + 3]);
-                    buffer[offset++] = (char)(g0 << 2 | g1 >> 4);
 
-                    if (g2 == -1) continue;
+                    if (g0 == -1 || g1 == -1 || g2 == -1 || g3 == -1) throw new Base64Exception($"Invalid char in base64 string");
 
-                    buffer[offset++] = (char)((g1 & 0b00001111) << 4 | (g2 >> 2));
+                    destination[offset++] = (char)(g0 << 2 | g1 >> 4);
 
-                    if (g3 == -1) continue;
+                    if (g2 == 64) continue;
 
-                    buffer[offset++] = (char)((g2 & 0b00000011) << 6 | g3);
+                    destination[offset++] = (char)((g1 & 0b00001111) << 4 | (g2 >> 2));
+
+                    if (g3 == 64) continue;
+
+                    destination[offset++] = (char)((g2 & 0b00000011) << 6 | g3);
 
 
 
@@ -523,15 +608,18 @@ namespace Aadev.Base64
                     int g1 = BASE64CHARS.IndexOf((char)source[i + 1]);
                     int g2 = BASE64CHARS.IndexOf((char)source[i + 2]);
                     int g3 = BASE64CHARS.IndexOf((char)source[i + 3]);
-                    buffer[offset++] = (char)(g0 << 2 | g1 >> 4);
 
-                    if (g2 == -1) continue;
+                    if (g0 == -1 || g1 == -1 || g2 == -1 || g3 == -1) throw new Base64Exception($"Invalid char in base64 string");
 
-                    buffer[offset++] = (char)((g1 & 0b00001111) << 4 | (g2 >> 2));
+                    destination[offset++] = (char)(g0 << 2 | g1 >> 4);
 
-                    if (g3 == -1) continue;
+                    if (g2 == 64) continue;
 
-                    buffer[offset++] = (char)((g2 & 0b00000011) << 6 | g3);
+                    destination[offset++] = (char)((g1 & 0b00001111) << 4 | (g2 >> 2));
+
+                    if (g3 == 64) continue;
+
+                    destination[offset++] = (char)((g2 & 0b00000011) << 6 | g3);
 
 
 
@@ -540,8 +628,19 @@ namespace Aadev.Base64
 
             return offset;
         }
-        public static int DecodeToByteArray(ReadOnlySpan<char> source, Span<byte> buffer, Base64Standard standard = Base64Standard.Base64)
+        /// <summary>
+        /// Decode base64 string to byte array
+        /// </summary>
+        /// <param name="source">String to decode</param>
+        /// <param name="destination">Destination buffer</param>
+        /// <param name="standard">Base64 Standard</param>
+        /// <returns>Number of chars written into buffer</returns>
+        /// <exception cref="ArgumentException">buffer is to small</exception>
+        /// <exception cref="Base64Exception">Base64 string must be a multiple of 4</exception>
+        public static int DecodeToByteArray(ReadOnlySpan<char> source, Span<byte> destination, Base64Standard standard = Base64Standard.Base64)
         {
+            if (destination.Length < GetDecodedLenght(source))
+                throw new ArgumentException($"{nameof(destination)} buffer is to small. Required {source.Length}, {destination.Length} given");
             if (source.Length % 4 != 0)
             {
                 throw new Base64Exception("Base64 string must be a multiple of 4");
@@ -556,16 +655,19 @@ namespace Aadev.Base64
                     int g1 = BASE64URLCHARS.IndexOf(source[i + 1]);
                     int g2 = BASE64URLCHARS.IndexOf(source[i + 2]);
                     int g3 = BASE64URLCHARS.IndexOf(source[i + 3]);
-                    buffer[offset++] = (byte)(g0 << 2 | g1 >> 4);
 
-                    if (g2 == -1) continue;
+                    if (g0 == -1 || g1 == -1 || g2 == -1 || g3 == -1) throw new Base64Exception($"Invalid char in base64 string");
 
-                    buffer[offset++] = (byte)((g1 & 0b00001111) << 4 | (g2 >> 2));
+                    destination[offset++] = (byte)(g0 << 2 | g1 >> 4);
 
-                    if (g3 == -1) continue;
+                    if (g2 == 64) continue;
+
+                    destination[offset++] = (byte)((g1 & 0b00001111) << 4 | (g2 >> 2));
+
+                    if (g3 == 64) continue;
 
 
-                    buffer[offset++] = (byte)((g2 & 0b00000011) << 6 | g3);
+                    destination[offset++] = (byte)((g2 & 0b00000011) << 6 | g3);
 
 
 
@@ -579,16 +681,19 @@ namespace Aadev.Base64
                     int g1 = BASE64CHARS.IndexOf(source[i + 1]);
                     int g2 = BASE64CHARS.IndexOf(source[i + 2]);
                     int g3 = BASE64CHARS.IndexOf(source[i + 3]);
-                    buffer[offset++] = (byte)(g0 << 2 | g1 >> 4);
 
-                    if (g2 == -1) continue;
+                    if (g0 == -1 || g1 == -1 || g2 == -1 || g3 == -1) throw new Base64Exception($"Invalid char in base64 string");
 
-                    buffer[offset++] = (byte)((g1 & 0b00001111) << 4 | (g2 >> 2));
+                    destination[offset++] = (byte)(g0 << 2 | g1 >> 4);
 
-                    if (g3 == -1) continue;
+                    if (g2 == 64) continue;
+
+                    destination[offset++] = (byte)((g1 & 0b00001111) << 4 | (g2 >> 2));
+
+                    if (g3 == 64) continue;
 
 
-                    buffer[offset++] = (byte)((g2 & 0b00000011) << 6 | g3);
+                    destination[offset++] = (byte)((g2 & 0b00000011) << 6 | g3);
 
 
 
@@ -597,8 +702,19 @@ namespace Aadev.Base64
 
             return offset;
         }
-        public static int DecodeToByteArray(ReadOnlySpan<byte> source, Span<byte> buffer, Base64Standard standard = Base64Standard.Base64)
+        /// <summary>
+        /// Decode base64 byte array to byte array
+        /// </summary>
+        /// <param name="source">Byte array to decode</param>
+        /// <param name="destination">Destination buffer</param>
+        /// <param name="standard">Base64 Standard</param>
+        /// <returns>Number of chars written into buffer</returns>
+        /// <exception cref="ArgumentException">buffer is to small</exception>
+        /// <exception cref="Base64Exception">Base64 string must be a multiple of 4</exception>
+        public static int DecodeToByteArray(ReadOnlySpan<byte> source, Span<byte> destination, Base64Standard standard = Base64Standard.Base64)
         {
+            if (destination.Length < GetDecodedLenght(source))
+                throw new ArgumentException($"{nameof(destination)} buffer is to small. Required {source.Length}, {destination.Length} given");
             if (source.Length % 4 != 0)
             {
                 throw new Base64Exception("Base64 string lenght must be multiplication of 4");
@@ -613,15 +729,18 @@ namespace Aadev.Base64
                     int g1 = BASE64URLCHARS.IndexOf((char)source[i + 1]);
                     int g2 = BASE64URLCHARS.IndexOf((char)source[i + 2]);
                     int g3 = BASE64URLCHARS.IndexOf((char)source[i + 3]);
-                    buffer[offset++] = (byte)(g0 << 2 | g1 >> 4);
 
-                    if (g2 == -1) continue;
+                    if (g0 == -1 || g1 == -1 || g2 == -1 || g3 == -1) throw new Base64Exception($"Invalid char in base64 string");
 
-                    buffer[offset++] = (byte)((g1 & 0b00001111) << 4 | (g2 >> 2));
+                    destination[offset++] = (byte)(g0 << 2 | g1 >> 4);
 
-                    if (g3 == -1) continue;
+                    if (g2 == 64) continue;
 
-                    buffer[offset++] = (byte)((g2 & 0b00000011) << 6 | g3);
+                    destination[offset++] = (byte)((g1 & 0b00001111) << 4 | (g2 >> 2));
+
+                    if (g3 == 64) continue;
+
+                    destination[offset++] = (byte)((g2 & 0b00000011) << 6 | g3);
 
 
 
@@ -635,15 +754,18 @@ namespace Aadev.Base64
                     int g1 = BASE64CHARS.IndexOf((char)source[i + 1]);
                     int g2 = BASE64CHARS.IndexOf((char)source[i + 2]);
                     int g3 = BASE64CHARS.IndexOf((char)source[i + 3]);
-                    buffer[offset++] = (byte)(g0 << 2 | g1 >> 4);
 
-                    if (g2 == -1) continue;
+                    if (g0 == -1 || g1 == -1 || g2 == -1 || g3 == -1) throw new Base64Exception($"Invalid char in base64 string");
 
-                    buffer[offset++] = (byte)((g1 & 0b00001111) << 4 | (g2 >> 2));
+                    destination[offset++] = (byte)(g0 << 2 | g1 >> 4);
 
-                    if (g3 == -1) continue;
+                    if (g2 == 64) continue;
 
-                    buffer[offset++] = (byte)((g2 & 0b00000011) << 6 | g3);
+                    destination[offset++] = (byte)((g1 & 0b00001111) << 4 | (g2 >> 2));
+
+                    if (g3 == 64) continue;
+
+                    destination[offset++] = (byte)((g2 & 0b00000011) << 6 | g3);
 
 
 
@@ -652,6 +774,11 @@ namespace Aadev.Base64
 
             return offset;
         }
+
+        #endregion
+
+        #region Get_lenght
+
 
         /// <summary>
         /// Returns lenght of Base64 string when encoding
@@ -670,12 +797,14 @@ namespace Aadev.Base64
         /// </summary>
         /// <param name="source">Base64 string</param>
         /// <returns>Lenght of decoded string</returns>
-        public static int GetDecodedLenght(ReadOnlySpan<char> source) => source.Length / 4 * 3 - (source[source.Length - 1] == '=' ? 1 : 0) - (source[source.Length - 2] == '=' ? 1 : 0);
+        public static int GetDecodedLenght(ReadOnlySpan<char> source) => source.Length / 4 * 3 - (source[source.Length - 1] is '=' ? 1 : 0) - (source[source.Length - 2] is '=' ? 1 : 0);
         /// <summary>
         /// Returns lenght of decoded byte array
         /// </summary>
         /// <param name="source">Base64 byte array</param>
         /// <returns>Lenght of decoded string</returns>
-        public static int GetDecodedLenght(ReadOnlySpan<byte> source) => source.Length / 4 * 3 - (source[source.Length - 1] == (byte)'=' ? 1 : 0) - (source[source.Length - 2] == (byte)'=' ? 1 : 0);
+        public static int GetDecodedLenght(ReadOnlySpan<byte> source) => source.Length / 4 * 3 - (source[source.Length - 1] is 0x3d/*=*/ ? 1 : 0) - (source[source.Length - 2] is 0x3d/*=*/ ? 1 : 0);
+
+        #endregion
     }
 }
